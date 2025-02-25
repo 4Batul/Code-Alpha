@@ -1,0 +1,156 @@
+//Task 4 Banking System Source code:
+
+#include <iostream>
+#include <vector>
+#include <string>
+
+using namespace std;
+
+// Forward declaration of Account class
+class Account;
+
+// Customer Class
+class Customer {
+public:
+    string name;
+    string id;
+    
+    Customer(string name, string id) : name(name), id(id) {}
+};
+
+// Account Class
+class Account {
+public:
+    string accountNumber;
+    float balance;
+    Customer* owner;  // Pointer to Customer who owns this account
+
+    Account(string accountNumber, Customer* owner) 
+        : accountNumber(accountNumber), balance(0.0), owner(owner) {}
+
+    void deposit(float amount) {
+        if (amount > 0) {
+            balance += amount;
+            cout << "Deposited: $" << amount << " to Account: " << accountNumber << endl;
+        } else {
+            cout << "Deposit amount must be positive." << endl;
+        }
+    }
+
+    bool withdraw(float amount) {
+        if (amount > 0 && amount <= balance) {
+            balance -= amount;
+            cout << "Withdrew: $" << amount << " from Account: " << accountNumber << endl;
+            return true;
+        } else {
+            cout << "Invalid withdrawal amount." << endl;
+            return false;
+        }
+    }
+
+    void showBalance() const {
+        cout << "Account Balance for " << owner->name << ": $" << balance << endl;
+    }
+};
+
+// Transaction Class (simple logging for now)
+class Transaction {
+public:
+    string transactionType;
+    float amount;
+
+    Transaction(string transactionType, float amount) 
+        : transactionType(transactionType), amount(amount) {}
+};
+
+// Banking Service Class
+class BankingService {
+private:
+    vector<Account> accounts;
+
+public:
+    void createAccount(Customer* customer, string accountNumber) {
+        accounts.emplace_back(accountNumber, customer);
+        cout << "Account created for " << customer->name << " with Account Number: " << accountNumber << endl;
+    }
+
+    Account* findAccount(string accountNumber) {
+        for (auto& account : accounts) {
+            if (account.accountNumber == accountNumber) {
+                return &account;
+            }
+        }
+        cout << "Account not found!" << endl;
+        return nullptr;
+    }
+};
+
+// Main Function
+int main() {
+    BankingService bank;
+    string customerName;
+    string accountNumber;
+    int choice;
+    float amount;
+
+    // Get customer's name for account creation
+    cout << "Enter your name: ";
+    getline(cin, customerName);
+    
+    // Create a unique account number (simple approach)
+    accountNumber = "ACC" + to_string(rand() % 1000000);  // Generates a random account number
+
+    // Create customer and account
+    Customer customer(customerName, "ID001");
+    bank.createAccount(&customer, accountNumber);
+
+    // Menu-driven system for deposits and withdrawals
+    do {
+        cout << "\n1. Deposit\n2. Withdraw\n3. Check Balance\n4. Exit\n";
+        cout << "Enter your choice: ";
+        cin >> choice;
+
+        switch (choice) {
+            case 1: // Deposit
+                cout << "Enter amount to deposit: $";
+                cin >> amount;
+                {
+                    Account* account = bank.findAccount(accountNumber);
+                    if (account) {
+                        account->deposit(amount);
+                    }
+                }
+                break;
+
+            case 2: // Withdraw
+                cout << "Enter amount to withdraw: $";
+                cin >> amount;
+                {
+                    Account* account = bank.findAccount(accountNumber);
+                    if (account) {
+                        account->withdraw(amount);
+                    }
+                }
+                break;
+
+            case 3: // Check Balance
+                {
+                    Account* account = bank.findAccount(accountNumber);
+                    if (account) {
+                        account->showBalance();
+                    }
+                }
+                break;
+
+            case 4:
+                cout << "Exiting the program. Thank you!" << endl;
+                break;
+
+            default:
+                cout << "Invalid choice, please try again." << endl;
+        }
+
+    } while (choice != 4);
+
+    return 0;
+}
