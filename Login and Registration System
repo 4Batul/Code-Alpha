@@ -1,0 +1,77 @@
+Task 2 Login and Registration System Source Code:
+#include <iostream>
+#include <fstream>
+#include <string>
+
+using namespace std;
+
+void registerUser () {
+    string username, password;
+    cout << "Enter username: ";
+    cin >> username;
+    cout << "Enter password: ";
+    cin >> password;
+
+    ofstream userFile(username + ".txt");
+    if (userFile.is_open()) {
+        userFile << username << endl;
+        userFile << password << endl;
+        userFile.close();
+        cout << "Registration successful!" << endl;
+    } else {
+        cout << "Error creating user file." << endl;
+    }
+}
+
+bool loginUser () {
+    string username, password, storedUsername, storedPassword;
+    cout << "Enter username: ";
+    cin >> username;
+    cout << "Enter password: ";
+    cin >> password;
+
+    ifstream userFile(username + ".txt");
+    if (userFile.is_open()) {
+        getline(userFile, storedUsername);
+        getline(userFile, storedPassword);
+        userFile.close();
+
+        if (username == storedUsername && password == storedPassword) {
+            cout << "Login successful!" << endl;
+            return true;
+        } else {
+            cout << "Invalid username or password." << endl;
+            return false;
+        }
+    } else {
+        cout << "User  not found." << endl;
+        return false;
+    }
+}
+
+int main() {
+    int choice;
+    do {
+        cout << "1. Register" << endl;
+        cout << "2. Login" << endl;
+        cout << "3. Exit" << endl;
+        cout << "Enter your choice: ";
+        cin >> choice;
+
+        switch (choice) {
+            case 1:
+                registerUser ();
+                break;
+            case 2:
+                loginUser ();
+                break;
+            case 3:
+                cout << "Exiting..." << endl;
+                break;
+            default:
+                cout << "Invalid choice. Please try again." << endl;
+        }
+    } while (choice != 3);
+
+    return 0;
+}
