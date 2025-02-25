@@ -1,0 +1,47 @@
+Task 1 Source Code: CGPA CALCULATOR
+#include<iostream>
+using namespace std;
+int main()
+{
+    int subnum;
+    cout<<"Enter the number of semesters: "<<endl;
+    cin>>subnum;
+    int sub[subnum];
+for (int i = 0; i < subnum; i++)
+{
+    cout<<"Enter the credit hours for your semester "<<i<<" :"<<endl;
+    cin>>sub[i];
+}
+
+float gpa[subnum];
+for (int m = 0; m < subnum; m++)
+{
+    cout<<"enter your GPA for semester "<<m<<endl;
+    cin>>gpa[m];
+}
+float gp[subnum];
+ for (int f = 0; f < subnum; f++)
+ { 
+    gp[f] = (gpa[f] * sub[f]);  // Store the result in gp[f]
+    cout << "Your credit points for semester " << f << " is: " << gp[f] << endl;
+ }
+ float tcp = 0; // Initialize tcp to 0.
+
+ for (int a = 0; a < subnum; a++)
+ {
+     tcp += (int)gp[a];
+ }
+float addch=0;
+for (int c = 0; c < subnum; c++)
+{
+    addch+=sub[c];
+}
+cout<<"Your total Credit Hours are: "<<addch<<endl;
+ cout<<"And total credit points: "<<tcp<<endl;
+ 
+ float cgpa;
+ cgpa=tcp/addch;
+ cout<<"Your total CGPA is: "<<cgpa<<endl;
+ 
+ return 0;
+}
